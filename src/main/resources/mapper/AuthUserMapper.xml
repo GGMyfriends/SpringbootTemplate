@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyhd.springbootshiro.dao.AuthUserDao">
+
+    <select id="selectUserById" resultType="com.yyhd.springbootshiro.entity.UserEntity">
+        SELECT
+            id,
+            nickName,
+            password,
+            trueName,
+            phone,
+            locked
+        FROM
+            auth_user
+        WHERE
+            id = #{userId}
+    </select>
+
+    <select id="selectUserByPhone" resultType="com.yyhd.springbootshiro.entity.UserEntity">
+        SELECT
+            id,
+            nickName,
+            password,
+            trueName,
+            phone,
+            locked
+        FROM
+            auth_user
+        WHERE
+            phone = #{phone}
+    </select>
+
+
+    <select id="selectRoleAndPermissionByUserId" resultType="java.util.HashMap">
+        SELECT
+            ar.roleName,
+            GROUP_CONCAT( ap.permissionsName ) permissionsNameList
+        FROM
+            auth_user_role ur
+                LEFT JOIN auth_role ar ON ur.roleId = ar.id
+                LEFT JOIN auth_role_per rp ON rp.roleId = ar.id
+                LEFT JOIN auth_permissions ap ON ap.id = rp.perId
+        WHERE
+            ur.userId = #{userId}
+        GROUP BY
+            ur.userId
+    </select>
+
+
+
+</mapper>
